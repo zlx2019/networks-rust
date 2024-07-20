@@ -1,0 +1,14 @@
+[package]
+name = "quic_demo"
+version = "0.1.0"
+edition = "2021"
+
+# Rust Quic Examples
+
+[dependencies]
+# quic协议实现库
+s2n-quic = "1"
+# 异步运行库
+tokio = {version = "1", features = ["full"]}
+# 错误包装库
+anyhow = "1"

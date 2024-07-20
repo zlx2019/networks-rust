@@ -1,0 +1,8 @@
+[package]
+name = "udp_demo"
+version = "0.1.0"
+edition = "2021"
+
+# Rust UDP Examples
+
+[dependencies]

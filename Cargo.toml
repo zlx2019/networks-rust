@@ -2,4 +2,4 @@
 [workspace]
 
 # 子工程
-members = ["quic","tcp", "tcp-tokio","udp"]
+members = [ "pingora-http-proxy", "pingora-lb","quic","tcp", "tcp-tokio","udp"]

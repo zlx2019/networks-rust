@@ -1,0 +1,16 @@
+[package]
+name = "pingora-lb"
+version = "0.1.0"
+edition = "2024"
+description = "使用 Pingora 实现一个 loadbalancer"
+
+[dependencies]
+# async std define
+async-trait = "0.1"
+# pingora net lib
+pingora = { version = "0.4.0", features = ["lb"] }
+
+# TODO sfv 最新版本 BUG
+#[patch.crates-io]
+#sfv = { git = "https://github.com/undef1nd/sfv.git", tag = "v0.9.4" }
+sfv = "0.9.4"

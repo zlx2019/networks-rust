@@ -1,0 +1,6 @@
+[package]
+name = "pingora-http-proxy"
+version = "0.1.0"
+edition = "2024"
+description = "使用 Pingora 实现一个 loadbalancer"
+[dependencies]

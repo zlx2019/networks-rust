@@ -11,10 +11,12 @@ use serde::{Deserialize, Serialize};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::Arc;
 use tokio::net::TcpListener;
+use tracing::info;
 
 /// 用于测试代理的HTTP服务器
 #[tokio::main]
 async fn main() {
+    tracing_subscriber::fmt::init();
     let state = AppState::new();
     let app = Router::new()
         .route("/", get(|| async { "Hello, world!" }))
@@ -24,8 +26,8 @@ async fn main() {
         .route("/users/{id}", put(update_user))
         .route("/users/{id}", delete(delete_user))
         .with_state(state);
-    let listen = TcpListener::bind("127.0.0.1:4000").await.unwrap();
-    println!("Listening on: {}", listen.local_addr().unwrap());
+    let listen = TcpListener::bind("127.0.0.1:3000").await.unwrap();
+    info!("Listening on: {}", listen.local_addr().unwrap());
     axum::serve(listen, app).await.unwrap();
 }
 

@@ -2,21 +2,26 @@
 name = "pingora-http-proxy"
 version = "0.1.0"
 edition = "2024"
-description = "使用 Pingora 实现一个 loadbalancer"
+description = "使用 Pingora 实现一个 http loadbalancer"
 [dependencies]
-# web
-axum = "0.8.3"
+# async runtime
 tokio = { version = "1.44.2", features = ["rt-multi-thread", "macros"] }
+# pingora
+pingora = {version = "0.4", features = ["lb", "rustls"]}
+async-trait = "0.1.88"
+sfv = "0.9.4"
 
-# seriali
 serde = { version = "1.0.219", features = ["derive"] }
-serde_json = "1.0.140"
+anyhow = "1.0.98"
+tracing = "0.1.41"
+tracing-subscriber = "0.3.19"
 
-# time
+
+### 开发时依赖 examples 需要用到的.
+[dev-dependencies]
+axum = "0.8.3"
 chrono = { version = "0.4.40", features = ["serde"] }
 dashmap = "6.1.0"
-
-# encrypt
 argon2 = "0.5.3"
-anyhow = "1.0.98"
 rand = "0.8"
+serde_json = "1.0.140"

@@ -2,6 +2,7 @@ use async_trait::async_trait;
 use pingora::prelude::*;
 use tracing::info;
 
+
 /// 一个极简的 HTTP 代理服务: 将所有请求转发到 `127.0.0.1:3000` 服务
 #[derive(Default)]
 pub struct MinimalHttpProxy {}

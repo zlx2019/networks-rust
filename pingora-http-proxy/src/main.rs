@@ -14,6 +14,7 @@ fn main() -> Result<()> {
     let mut http_proxy_service = http_proxy_service(&server.configuration, http_proxy);
     http_proxy_service.add_tcp(proxy_addr);
     info!("http proxy server running on {}", proxy_addr);
+
     // 将我们的代理服务，注册到服务器，并且运行.
     server.add_service(http_proxy_service);
     server.run_forever();

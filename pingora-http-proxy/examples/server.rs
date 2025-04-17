@@ -1,3 +1,5 @@
+use std::net::SocketAddr;
+use std::str::FromStr;
 use argon2::password_hash::rand_core::OsRng;
 use argon2::password_hash::SaltString;
 use argon2::{Argon2, PasswordHasher};
@@ -9,28 +11,51 @@ use chrono::{DateTime, Utc};
 use dashmap::DashMap;
 use serde::{Deserialize, Serialize};
 use std::sync::atomic::{AtomicU64, Ordering};
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
+use lazy_static::lazy_static;
 use tokio::net::TcpListener;
-use tracing::info;
+use tracing::{error, info};
+
+lazy_static!{
+    static ref ADDR: Mutex<SocketAddr> = Mutex::new(
+        SocketAddr::from_str("127.0.0.1:3000").unwrap()
+    );
+}
 
 /// 用于测试代理的HTTP服务器
 #[tokio::main]
 async fn main() {
     tracing_subscriber::fmt::init();
+    // args
+    let args = std::env::args().collect::<Vec<String>>();
+    if args.len() < 2 {
+        error!("Usage: {} <address>", args[0]);
+        std::process::exit(1);
+    }
+    let addr = SocketAddr::from_str(&args[1]).expect("Failed to parse socket address");
+    {
+        *ADDR.lock().unwrap() = addr;
+    }
     let state = AppState::new();
     let app = Router::new()
         .route("/", get(|| async { "Hello, world!" }))
+        .route("/ping", get(ping))
         .route("/users/{id}", get(get_user))
         .route("/users", get(list_users))
         .route("/users", post(create_user))
         .route("/users/{id}", put(update_user))
         .route("/users/{id}", delete(delete_user))
         .with_state(state);
-    let listen = TcpListener::bind("127.0.0.1:3000").await.unwrap();
+    let listen = TcpListener::bind(addr).await.unwrap();
     info!("Listening on: {}", listen.local_addr().unwrap());
     axum::serve(listen, app).await.unwrap();
 }
 
+
+async fn ping() -> &'static str {
+    info!("PING success: [{}]", *ADDR.lock().unwrap());
+    "StatusOk"
+}
 
 /// User model
 #[derive(Debug, Clone, Serialize, Deserialize)]
